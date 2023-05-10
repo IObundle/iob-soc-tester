@@ -1,4 +1,5 @@
 `timescale 1ns / 1ps
+`include "bsp.vh"
 `include "iob_soc_tester_conf.vh"
 
 module iob_soc_tester_fpga_wrapper
@@ -131,14 +132,14 @@ module iob_soc_tester_fpga_wrapper
 `endif
 `ifdef IOB_SOC_TESTER_USE_EXTMEM
       //axi system backend interface
-      `include "iob_axi_m_portmap.vh"	
+      `include "iob_bus_0_2_axi_m_portmap.vh"	
 `endif
 
       //UART
-      .portmap_0_txd (uart_txd),
-      .portmap_0_rxd (uart_rxd),
-      .portmap_0_rts (),
-      .portmap_0_cts (1'b1)
+      .UART_txd (uart_txd),
+      .UART_rxd (uart_rxd),
+      .UART_rts (),
+      .UART_cts (1'b1)
       );
 
 
@@ -180,7 +181,7 @@ module iob_soc_tester_fpga_wrapper
       .S00_AXI_ACLK         (clk), //from ddr4 controller PLL to be used by system
       
       //Write address
-      .S00_AXI_AWID         (axi_awid[0+:AXI_ID_W]),
+      .S00_AXI_AWID         (axi_awid[0+:1]),
       .S00_AXI_AWADDR       (axi_awaddr[0*AXI_ADDR_W+:AXI_ADDR_W]),
       .S00_AXI_AWLEN        (axi_awlen[7:0]),
       .S00_AXI_AWSIZE       (axi_awsize[2:0]),
@@ -200,13 +201,13 @@ module iob_soc_tester_fpga_wrapper
       .S00_AXI_WREADY       (axi_wready[0]),
       
       //Write response
-      .S00_AXI_BID          (axi_bid[0+:AXI_ID_W]),
+      .S00_AXI_BID          (axi_bid[0+:1]),
       .S00_AXI_BRESP        (axi_bresp[1:0]),
       .S00_AXI_BVALID       (axi_bvalid[0]),
       .S00_AXI_BREADY       (axi_bready[0]),
       
       //Read address
-      .S00_AXI_ARID         (axi_arid[0+:AXI_ID_W]),
+      .S00_AXI_ARID         (axi_arid[0+:1]),
       .S00_AXI_ARADDR       (axi_araddr[0*AXI_ADDR_W+:AXI_ADDR_W]),
       .S00_AXI_ARLEN        (axi_arlen[7:0]),
       .S00_AXI_ARSIZE       (axi_arsize[2:0]),
@@ -219,7 +220,7 @@ module iob_soc_tester_fpga_wrapper
       .S00_AXI_ARREADY      (axi_arready[0]),
       
       //Read data
-      .S00_AXI_RID          (axi_rid[0+:AXI_ID_W]),
+      .S00_AXI_RID          (axi_rid[0+:1]),
       .S00_AXI_RDATA        (axi_rdata[31:0]),
       .S00_AXI_RRESP        (axi_rresp[1:0]),
       .S00_AXI_RLAST        (axi_rlast[0]),
@@ -234,12 +235,12 @@ module iob_soc_tester_fpga_wrapper
       .S01_AXI_ACLK         (clk),
       
       //Write address
-      .S01_AXI_AWID         (axi_awid[AXI_ID_W+:AXI_ID_W]),
+      .S01_AXI_AWID         (axi_awid[AXI_ID_W+:1]),
       .S01_AXI_AWADDR       (axi_awaddr[1*AXI_ADDR_W+:AXI_ADDR_W]),
       .S01_AXI_AWLEN        (axi_awlen[15:8]),
       .S01_AXI_AWSIZE       (axi_awsize[5:3]),
       .S01_AXI_AWBURST      (axi_awburst[3:2]),
-      .S01_AXI_AWLOCK       (axi_awlock[1]),
+      .S01_AXI_AWLOCK       (axi_awlock[2]),
       .S01_AXI_AWCACHE      (axi_awcache[7:4]),
       .S01_AXI_AWPROT       (axi_awprot[5:3]),
       .S01_AXI_AWQOS        (axi_awqos[7:4]),
@@ -254,13 +255,13 @@ module iob_soc_tester_fpga_wrapper
       .S01_AXI_WREADY       (axi_wready[1]),
       
       //Write response
-      .S01_AXI_BID          (axi_bid[AXI_ID_W+:AXI_ID_W]),
+      .S01_AXI_BID          (axi_bid[AXI_ID_W+:1]),
       .S01_AXI_BRESP        (axi_bresp[3:2]),
       .S01_AXI_BVALID       (axi_bvalid[1]),
       .S01_AXI_BREADY       (axi_bready[1]),
       
       //Read address
-      .S01_AXI_ARID         (axi_arid[AXI_ID_W+:AXI_ID_W]),
+      .S01_AXI_ARID         (axi_arid[AXI_ID_W+:1]),
       .S01_AXI_ARADDR       (axi_araddr[1*AXI_ADDR_W+:AXI_ADDR_W]),
       .S01_AXI_ARLEN        (axi_arlen[15:8]),
       .S01_AXI_ARSIZE       (axi_arsize[5:3]),
@@ -273,7 +274,7 @@ module iob_soc_tester_fpga_wrapper
       .S01_AXI_ARREADY      (axi_arready[1]),
       
       //Read data
-      .S01_AXI_RID          (axi_rid[AXI_ID_W+:AXI_ID_W]),
+      .S01_AXI_RID          (axi_rid[AXI_ID_W+:1]),
       .S01_AXI_RDATA        (axi_rdata[63:32]),
       .S01_AXI_RRESP        (axi_rresp[3:2]),
       .S01_AXI_RLAST        (axi_rlast[1]),

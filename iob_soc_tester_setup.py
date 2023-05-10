@@ -2,28 +2,33 @@
 
 import os, sys
 sys.path.insert(0, os.getcwd()+'/submodules/LIB/scripts')
-sys.path.insert(0, os.path.dirname(__file__)+'/scripts')
 import setup
 from mk_configuration import update_define
+
+sys.path.insert(0, os.path.dirname(__file__)+'/scripts')
 from tester import setup_tester, update_tester_conf
+
+sys.path.insert(0, os.path.dirname(__file__)+'/submodules/IOBSOC/scripts')
+import iob_soc
 
 name='iob_soc_tester'
 version='V0.50'
-flows='pc-emul emb sim doc fpga'
-setup_dir=os.path.dirname(__file__)
-build_dir=f"../{name}_{version}"
+flows='pc-emul emb sim fpga'
+if setup.is_top_module(sys.modules[__name__]):
+    setup_dir=os.path.dirname(__file__)
+    build_dir=f"../{name}_{version}"
 submodules = {
     'hw_setup': {
         'headers' : [ 'iob_wire', 'axi_wire', 'axi_m_m_portmap', 'axi_m_port', 'axi_m_m_portmap', 'axi_m_portmap'],
         'modules': [ 'PICORV32', 'CACHE', 'UART', 'iob_merge', 'iob_split', 'iob_rom_sp.v', 'iob_ram_dp_be.v', 'iob_ram_dp_be_xil.v', 'iob_pulse_gen.v', 'iob_counter.v', 'iob_ram_2p_asym.v', 'iob_reg.v', 'iob_reg_re.v', 'iob_ram_sp_be.v', 'iob_ram_dp.v', 'iob_reset_sync']
     },
     'sim_setup': {
-        'headers' : [ 'axi_s_portmap' ],
-        'modules': [ 'axi_ram.v', 'iob_tasks.vh'  ]
+        'headers' : [ 'axi_s_portmap', 'iob_tasks.vh'  ],
+        'modules': [ 'axi_ram.v' ]
     },
     'sw_setup': {
         'headers': [  ],
-        'modules': [ 'CACHE', 'UART', ]
+        'modules': [ 'CACHE', 'UART', 'iob_str'  ]
     },
 }
 
@@ -139,7 +144,7 @@ if 'module_parameters' not in vars():
         # Map IO connections of Tester peripherals with UUT's IO and the top system.
         'peripheral_portmap':
         [
-            ({'corename':'UART0', 'if_name':'rs232', 'port':'', 'bits':[]},{'corename':'', 'if_name':'', 'port':'', 'bits':[]}), #Map UART0 of tester to external interface
+            ({'corename':'UART0', 'if_name':'rs232', 'port':'', 'bits':[]},{'corename':'self', 'if_name':'UART', 'port':'', 'bits':[]}), #Map UART0 of tester to external interface
         ],
 
         # Allows overriding entries in 'confs' dictionary of iob_soc_tester.py
@@ -156,6 +161,10 @@ if 'module_parameters' not in vars():
 
 # Update tester configuration based on module_parameters
 update_tester_conf(sys.modules[__name__])
+
+# Add IOb-SoC modules. These will copy and generate common files from the IOb-SoC repository.
+# Don't add module to 'hw_setup'. This will be added by the setup_tester function.
+iob_soc.add_iob_soc_modules(sys.modules[__name__])
 
 def custom_setup():
     # Add the following arguments:
@@ -174,8 +183,9 @@ def custom_setup():
             submodules['hw_setup']['headers'] += [
                      { 'file_prefix':'iob_bus_0_2_', 'interface':'axi_m_portmap', 'wire_prefix':'', 'port_prefix':'', 'bus_start':0, 'bus_size':2 },
                      { 'file_prefix':'iob_bus_2_3_', 'interface':'axi_s_portmap', 'wire_prefix':'', 'port_prefix':'', 'bus_start':2, 'bus_size':1 },
-                     { 'file_prefix':'iob_bus_0_2_s_', 'interface':'axi_portmap', 'wire_prefix':'', 'port_prefix':'s_', 'bus_start':0, 'bus_size':2 },
-                     { 'file_prefix':'iob_bus_2_3_m_', 'interface':'axi_portmap', 'wire_prefix':'', 'port_prefix':'m_', 'bus_start':2, 'bus_size':1 },
+                     # Can't use portmaps below, because it creates axi_awlock and axi_arlock with 2 bits instead of 1 (these are used for axi_interconnect)
+                     #{ 'file_prefix':'iob_bus_0_2_s_', 'interface':'axi_portmap', 'wire_prefix':'', 'port_prefix':'s_', 'bus_start':0, 'bus_size':2 },
+                     #{ 'file_prefix':'iob_bus_2_3_m_', 'interface':'axi_portmap', 'wire_prefix':'', 'port_prefix':'m_', 'bus_start':2, 'bus_size':1 },
                      { 'file_prefix':'iob_bus_3_', 'interface':'axi_wire', 'wire_prefix':'', 'port_prefix':'', 'bus_size':3 },
                      { 'file_prefix':'iob_bus_2_', 'interface':'axi_wire', 'wire_prefix':'', 'port_prefix':'', 'bus_size':2 },
                     ]
