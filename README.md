@@ -4,7 +4,7 @@ The [OpenCryptoTester](https://nlnet.nl/project/OpenCryptoTester#ack) project ai
 
 # Repository moved
 
-### The new Tester contents along with up-to-date instructions and an example System Under Test are available at the [IOb-SoC-SUT](https://github.com/IObundle/iob-soc-sut) repository.
+### The new Tester contents along with up-to-date instructions and an example System Under Test (SUT) are available at the [IOb-SoC-SUT](https://github.com/IObundle/iob-soc-sut) repository.
 
 # Brief development history
 
@@ -20,7 +20,8 @@ The IOb-SoC repository is usually added as a git submodule for easier version co
 
 Currently the IObundle projects use a Python-based Object Oriented setup process, that allows for easier integration of components and creation of component derivations.
 
-The new Tester used in the [IOb-SoC-SUT](https://github.com/IObundle/iob-soc-sut) repository is just a subclass of IOb-SoC, that creates a derivation of that system which the tools required to specifically verify that System Under Test (SUT).
+The new Tester used in the [IOb-SoC-SUT](https://github.com/IObundle/iob-soc-sut) repository is a subclass of IOb-SoC that creates a derivation of that system.
+It also contains the specialized tools required to verify that System Under Test (SUT).
 
 The Tester system is compatible with any Unit Under Tester (UUT) as it does not impose any hardware constraints.
 For instructions on how to set up the Tester with a generic UUT, see [this section](https://github.com/IObundle/iob-soc-sut#instructions-to-configure-the-opencryptotester-with-a-generic-uut).
