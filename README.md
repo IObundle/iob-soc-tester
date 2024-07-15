@@ -5,7 +5,16 @@ IOb-SoC-Tester is a platform for developing and validating hardware/software (HW
 This project initially started with the [OpenCryptoTester](https://nlnet.nl/project/OpenCryptoTester#ack) to verify cryptographic systems that improve internet security. However, the IOb-SoC Tester can also be used to test any Core or SoC. The proposed tester SoC should open the way for open-source test instrumentation operated bare-metal or under Linux.
 
 ## List of developed Test Instruments
-(insert bullet list here)
+
+- [IOb-REGFILEIF](https://github.com/IObundle/iob-regfileif): Provides a register file with configurable read/write access.
+- [IOb-AxiStream](https://github.com/IObundle/iob-axis): Provides an AXI Stream interface.
+- [IOb-GPIO](https://github.com/IObundle/iob-gpio): Provides a General Purpose Input/Output interface.
+- [IOb-Monitor](https://github.com/IObundle/iob-pfsm): Provides a Programmable Finite State Machine (PFSM) based Monitor with configurable I/Os.
+- [IOb-ILA](https://github.com/IObundle/iob-ila): Provides an Integrated Logic Analyzer.
+- [IOb-DMA](https://github.com/IObundle/iob-dma): Provides an AXI Stream-based Direct Memory Interface interface for other system peripherals.
+- [IOb-Timer](https://github.com/IObundle/iob-timer): Provides a Timer.
+- [IOb-SPI](https://github.com/IObundle/iob-spi): Provides an SPI interface.
+- [IOb-NCO](https://github.com/IObundle/iob-nco): Provides a Numerically Controlled Oscillator with a configurable clock output.
 
 # Repository moved
 
